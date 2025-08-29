@@ -15,13 +15,13 @@ class BeerClientImplTest {
     @Test
     void listBeersNoName() {
 
-        beerClientImpl.listBeers(null);
+        beerClientImpl.listBeers(null, null, null, null);
     }
 
     @Test
-    void listBeers() {
+    void listBeersParams() {
 
-        beerClientImpl.listBeers("ALE");
+        beerClientImpl.listBeers("ALE", null, null, null);
     }
 
 }
