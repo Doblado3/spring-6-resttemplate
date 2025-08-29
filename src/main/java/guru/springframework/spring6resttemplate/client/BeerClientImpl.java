@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
@@ -24,16 +25,19 @@ public class BeerClientImpl implements BeerClient {
 
 
     @Override
-    public Page<BeerDTO> listBeers() {
+    public Page<BeerDTO> listBeers(String beerName) {
 
         RestTemplate restTemplate = restTemplateBuilder.build();
 
-        ResponseEntity<RestPageImpl> stringResponse =
-                restTemplate.getForEntity(GET_BEER_PATH, RestPageImpl.class);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
 
+        if(beerName != null) {
+            uriComponentsBuilder.queryParam("beerName", beerName);
+        }
 
+        ResponseEntity<RestPageImpl> response =
+                restTemplate.getForEntity(uriComponentsBuilder.toUriString(), RestPageImpl.class);
 
-
-        return null;
+        return response.getBody();
     }
 }
