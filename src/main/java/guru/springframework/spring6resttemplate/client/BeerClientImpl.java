@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,6 +56,34 @@ public class BeerClientImpl implements BeerClient {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
+    }
+
+    @Override
+    public BeerDTO createBeer(BeerDTO newDto) {
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        URI uri = restTemplate.postForLocation(GET_BEER_PATH, newDto);
+
+        return restTemplate.getForObject(uri.getPath(), BeerDTO.class);
+    }
+
+    @Override
+    public BeerDTO updateBeerById(BeerDTO beerToUpdate) {
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        restTemplate.put(GET_BEER_BY_ID_PATH, beerToUpdate, beerToUpdate.getId());
+
+        return getBeerById(beerToUpdate.getId());
+    }
+
+    @Override
+    public void deleteBeerById(UUID id) {
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        restTemplate.delete(GET_BEER_BY_ID_PATH, id);
     }
 
     private UriComponentsBuilder buildUriWithQueryParams(String beerName, BeerStyle beerStyle, Integer pageNumber, Integer size) {
